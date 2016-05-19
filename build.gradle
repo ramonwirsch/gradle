@@ -188,7 +188,7 @@ allprojects {
     group = 'org.gradle'
 
     repositories {
-        maven { url 'https://repo.gradle.org/gradle/libs-milestones' }
+        maven { url 'https://repo.gradle.org/gradle/libs-snapshots' }
     }
 }
 
@@ -231,7 +231,7 @@ dependencies {
     runtime project(':launcher')
     runtime project(':wrapper')
     runtime project(":installationBeacon")
-    runtime 'org.gradle:gradle-script-kotlin:1.0.0-M1'
+    runtime 'org.gradle:gradle-script-kotlin:1.0.0-SNAPSHOT'
     gradlePlugins pluginProjects
     gradlePlugins project(':dependencyManagement')
     gradlePlugins project(':testKit')

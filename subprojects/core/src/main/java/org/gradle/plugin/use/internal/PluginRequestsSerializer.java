@@ -32,10 +32,11 @@ public class PluginRequestsSerializer implements Serializer<PluginRequests> {
         for (int i = 0; i < requestCount; i++) {
             PluginId pluginId = PluginId.unvalidated(decoder.readString());
             String version = decoder.readNullableString();
+            boolean noApply = decoder.readBoolean();
             int lineNumber = decoder.readSmallInt();
             String scriptDisplayName = decoder.readString();
 
-            requests.add(i, new DefaultPluginRequest(pluginId, version, lineNumber, scriptDisplayName));
+            requests.add(i, new DefaultPluginRequest(pluginId, version, noApply, lineNumber, scriptDisplayName));
         }
         return new DefaultPluginRequests(requests);
     }
@@ -46,6 +47,7 @@ public class PluginRequestsSerializer implements Serializer<PluginRequests> {
         for (PluginRequest request : requests) {
             encoder.writeString(request.getId().asString());
             encoder.writeNullableString(request.getVersion());
+            encoder.writeBoolean(request.isNoApply());
             encoder.writeSmallInt(request.getLineNumber());
             encoder.writeString(request.getScriptDisplayName());
         }

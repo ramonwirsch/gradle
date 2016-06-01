@@ -85,6 +85,24 @@ class CorePluginUseIntegrationSpec extends AbstractIntegrationSpec {
         failure.assertHasLineNumber(3)
     }
 
+    void "core plugins cannot be used with noApply()"() {
+        given:
+        buildScript """
+            plugins {
+                id "java" noApply()
+            }
+        """
+
+        when:
+        fails "tasks"
+
+        then:
+        failure.assertHasDescription("Error resolving plugin [id: 'java' noApply]")
+        failure.assertHasCause("Plugin 'java' is a core Gradle plugin, which is already on the classpath")
+        failure.assertHasFileName("Build file '$buildFile.absolutePath'")
+        failure.assertHasLineNumber(3)
+    }
+
     def "cant ask for same plugin twice"() {
         given:
         buildScript """

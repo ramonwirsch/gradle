@@ -23,24 +23,26 @@ public class DefaultPluginRequest implements PluginRequest {
 
     private final PluginId id;
     private final String version;
+    private final boolean noApply;
     private final int lineNumber;
     private final String scriptDisplayName;
 
-    public DefaultPluginRequest(String id, String version, int lineNumber, ScriptSource scriptSource) {
-        this(PluginId.of(id), version, lineNumber, scriptSource);
+    public DefaultPluginRequest(String id, String version, boolean noApply, int lineNumber, ScriptSource scriptSource) {
+        this(PluginId.of(id), version, noApply, lineNumber, scriptSource);
     }
 
-    public DefaultPluginRequest(PluginId id, String version, int lineNumber, ScriptSource scriptSource) {
-        this(id, version, lineNumber, scriptSource.getDisplayName());
+    public DefaultPluginRequest(PluginId id, String version, boolean noApply, int lineNumber, ScriptSource scriptSource) {
+        this(id, version, noApply, lineNumber, scriptSource.getDisplayName());
     }
 
-    public DefaultPluginRequest(String id, String version, int lineNumber, String scriptDisplayName) {
-        this(PluginId.of(id), version, lineNumber, scriptDisplayName);
+    public DefaultPluginRequest(String id, String version, boolean noApply, int lineNumber, String scriptDisplayName) {
+        this(PluginId.of(id), version, noApply, lineNumber, scriptDisplayName);
     }
 
-    public DefaultPluginRequest(PluginId id, String version, int lineNumber, String scriptDisplayName) {
+    public DefaultPluginRequest(PluginId id, String version, boolean noApply, int lineNumber, String scriptDisplayName) {
         this.id = id;
         this.version = version;
+        this.noApply = noApply;
         this.lineNumber = lineNumber;
         this.scriptDisplayName = scriptDisplayName;
     }
@@ -53,6 +55,10 @@ public class DefaultPluginRequest implements PluginRequest {
         return version;
     }
 
+    public boolean isNoApply() {
+        return noApply;
+    }
+
     public int getLineNumber() {
         return lineNumber;
     }
@@ -63,10 +69,11 @@ public class DefaultPluginRequest implements PluginRequest {
 
     @Override
     public String toString() {
+        String noApply = this.noApply ? " noApply" : "";
         if (version == null) {
-            return String.format("[id: '%s']", id);
+            return String.format("[id: '%s'%s]", id, noApply);
         } else {
-            return String.format("[id: '%s', version: '%s']", id, version);
+            return String.format("[id: '%s', version: '%s'%s]", id, version, noApply);
         }
     }
 
@@ -85,22 +92,21 @@ public class DefaultPluginRequest implements PluginRequest {
 
         DefaultPluginRequest that = (DefaultPluginRequest) o;
 
+        if (noApply != that.noApply) {
+            return false;
+        }
         if (!id.equals(that.id)) {
             return false;
         }
-        if (version != null ? !version.equals(that.version) : that.version != null) {
-            return false;
-        }
+        return version != null ? version.equals(that.version) : that.version == null;
 
-        return true;
     }
 
     @Override
     public int hashCode() {
         int result = id.hashCode();
         result = 31 * result + (version != null ? version.hashCode() : 0);
+        result = 31 * result + (noApply ? 1 : 0);
         return result;
     }
-
-
 }

@@ -26,6 +26,8 @@ public interface PluginRequest {
     @Nullable
     String getVersion();
 
+    boolean isNoApply();
+
     int getLineNumber();
 
     String getScriptDisplayName();

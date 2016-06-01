@@ -46,6 +46,7 @@ public class PluginRequestCollector {
     private static class DependencySpecImpl implements PluginDependencySpec {
         private final PluginId id;
         private String version;
+        private boolean noApply;
         private final int lineNumber;
 
         private DependencySpecImpl(String id, int lineNumber) {
@@ -53,8 +54,15 @@ public class PluginRequestCollector {
             this.lineNumber = lineNumber;
         }
 
-        public void version(String version) {
+        public PluginDependencySpec version(String version) {
             this.version = version;
+            return this;
+        }
+
+        @Override
+        public PluginDependencySpec noApply() {
+            this.noApply = true;
+            return this;
         }
     }
 
@@ -73,7 +81,7 @@ public class PluginRequestCollector {
     public List<PluginRequest> getRequests() {
         List<PluginRequest> pluginRequests = collect(specs, new Transformer<PluginRequest, DependencySpecImpl>() {
             public PluginRequest transform(DependencySpecImpl original) {
-                return new DefaultPluginRequest(original.id, original.version, original.lineNumber, scriptSource);
+                return new DefaultPluginRequest(original.id, original.version, original.noApply, original.lineNumber, scriptSource);
             }
         });
 

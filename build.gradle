@@ -189,6 +189,7 @@ allprojects {
 
     repositories {
         maven { url 'https://repo.gradle.org/gradle/libs-snapshots' }
+        maven { url 'https://repo.gradle.org/gradle/libs-milestones' }
     }
 }
 
